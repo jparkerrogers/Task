@@ -11,6 +11,8 @@ import UIKit
 class TaskDetailTableViewController: UITableViewController {
     
     var task: Task?
+    
+    var dueDateValue: NSDate?
 
     @IBOutlet weak var nameTextField: UITextField!
     
@@ -18,16 +20,14 @@ class TaskDetailTableViewController: UITableViewController {
     
     @IBOutlet weak var noteTextField: UITextView!
     
+    @IBOutlet var dueDatePicker: UIDatePicker!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        dateTextField.inputView = dueDatePicker
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-    }
+            }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -43,6 +43,21 @@ class TaskDetailTableViewController: UITableViewController {
     @IBAction func cancelButtonTapped(sender: AnyObject) {
         
         
+        
+    }
+    
+    @IBAction func dueDatePickerValueChanged(sender: UIDatePicker) {
+        
+        self.dateTextField.text = sender.date.stringValue()
+        self.dueDateValue = sender.date
+        
+    }
+    
+    @IBAction func userTappedView(sender: AnyObject) {
+        
+        self.nameTextField.resignFirstResponder()
+        self.dateTextField.resignFirstResponder()
+        self.noteTextField.resignFirstResponder()
         
     }
     

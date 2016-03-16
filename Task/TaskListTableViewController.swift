@@ -88,14 +88,40 @@ class TaskListTableViewController: UITableViewController {
     }
     */
 
-    /*
+    
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        
+        if segue.identifier == "toViewTask" {
+            
+            let destinationViewController = segue.destinationViewController as?
+            TaskDetailTableViewController
+            
+            if let taskDetailTableViewController = destinationViewController {
+                
+                _ = taskDetailTableViewController.view
+                
+                if let selectedRow = tableView.indexPathForSelectedRow?.row {
+                    taskDetailTableViewController.updateWithTask(TaskController.sharedController.tasks[selectedRow])
+                }
+            }
+        }
     }
-    */
+}
 
+extension TaskListTableViewController: ButtonTableViewCellDelegate {
+    
+    
+    func buttonCellButonTapped(sender: ButtonTableViewCell) {
+        
+        let indexPath = tableView.indexPathForCell(sender)!
+        
+        let task = TaskController.sharedController.incompleteTasks[indexPath.row]
+        task.isComplete = !task.isComplete.boolValue
+        TaskController.sharedController.saveToPersistentStorage()
+        
+        tableView.reloadData()
+    }
 }
