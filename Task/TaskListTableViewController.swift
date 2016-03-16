@@ -32,7 +32,7 @@ class TaskListTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return TaskController.sharedController.mockTasks.count
+        return TaskController.sharedController.tasks.count
     }
 
     
