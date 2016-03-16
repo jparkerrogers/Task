@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class TaskDetailTableViewController: UITableViewController {
     
@@ -36,13 +37,17 @@ class TaskDetailTableViewController: UITableViewController {
     
     @IBAction func saveButtonTapped(sender: AnyObject) {
         
+        updateTask()
         
+        navigationController?.popToRootViewControllerAnimated(true)
         
     }
     
     @IBAction func cancelButtonTapped(sender: AnyObject) {
         
-        
+        self.nameTextField.text = ""
+        self.dateTextField.text = ""
+        self.noteTextField.text = ""
         
     }
     
@@ -50,6 +55,9 @@ class TaskDetailTableViewController: UITableViewController {
         
         self.dateTextField.text = sender.date.stringValue()
         self.dueDateValue = sender.date
+//        let todaysDate = dueDatePicker.
+        
+        // i want to see if If i can set the current date as the default value before the person taps the date.
         
     }
     
@@ -61,9 +69,29 @@ class TaskDetailTableViewController: UITableViewController {
         
     }
     
+    func updateTask() {
+        
+        let name = nameTextField.text!
+        let due = dueDateValue
+        let notes = noteTextField.text
+        
+        if let task = self.task {
+            task.name = name
+            task.due = due
+            task.notes = notes
+        } else {
+            
+            let newTask = Task(name: name, notes: notes, due: due)
+            
+            TaskController.sharedController.addTask(newTask)
+        }
+    }
+    
     func updateWithTask(task: Task) {
         
         self.task = task
+        
+        /// self.task = task is used so that I do not need to force unwrap my objects.
         
         title = task.name
         

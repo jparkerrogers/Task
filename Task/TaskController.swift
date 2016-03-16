@@ -7,35 +7,38 @@
 //
 
 import Foundation
+import CoreData
 
 class TaskController {
     
     private let TaskKey = "tasks"
     
-    var tasks: [Task] = []
-    
     static let sharedController = TaskController()
     
-    init() {
+    var tasks: [Task] {
         
-        loadFromPersistentStorage()
+        let request = NSFetchRequest(entityName: "Task")
+        
+        do {
+            return try Stack.sharedStack.managedObjectContext.executeFetchRequest(request) as! [Task]
+        } catch {
+            return []
+        }
     }
     
     var completedTasks: [Task] {
         
-        return tasks.filter({$0.isComplete})
+        return tasks.filter({$0.isComplete.boolValue})
         
     }
     
     var incompleteTasks: [Task] {
         
-        return tasks.filter({!$0.isComplete})
+        return tasks.filter({!$0.isComplete.boolValue})
         
     }
     
     func addTask(task: Task) {
-        
-        tasks.append(task)
         
         saveToPersistentStorage()
     
@@ -43,26 +46,16 @@ class TaskController {
     
     func removeTask(task: Task) {
         
-        if let taskIndex = tasks.indexOf(task) {
-            tasks.removeAtIndex(taskIndex)
-            
-            saveToPersistentStorage()
+        task.managedObjectContext?.deleteObject(task)
+        saveToPersistentStorage()
         }
-        
-    }
     
     func saveToPersistentStorage() {
         
-        NSKeyedArchiver.archiveRootObject(self.tasks, toFile: self.filePath(TaskKey))
-        
-    }
-    
-    func loadFromPersistentStorage() {
-        
-        let unarchivedTasks = NSKeyedUnarchiver.unarchiveObjectWithFile(self.filePath(TaskKey))
-        
-        if let tasks = unarchivedTasks as? [Task] {
-            self.tasks = tasks
+        do {
+            try Stack.sharedStack.managedObjectContext.save()
+        }catch {
+            print("there was an error saving the Managed Object Context")
         }
         
     }
@@ -74,5 +67,6 @@ class TaskController {
         
         return entriesPath
     }
-
 }
+
+
