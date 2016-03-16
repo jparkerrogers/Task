@@ -30,10 +30,23 @@ class ButtonTableViewCell: UITableViewCell {
         } else {
             button.setImage(UIImage(named: "incomplete"), forState: .Normal)
         }
+        
     }
-}
-protocol ButtonTableViewCellDelegate {
     
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        // Initialization code
+    }
+
+    override func setSelected(selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+
+        // Configure the view for the selected state
+    }
+
+}
+
+protocol ButtonTableViewCellDelegate {
     func buttonCellButonTapped(sender: ButtonTableViewCell)
 }
 
@@ -42,7 +55,6 @@ extension ButtonTableViewCell {
     func updateWithTask(task: Task) {
         
         primaryLabel.text = task.name
-        
         updateButton(task.isComplete.boolValue)
         
     }
